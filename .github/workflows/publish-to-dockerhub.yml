@@ -35,7 +35,7 @@ jobs:
         with:
           # IMPORTANTE: Troque 'seu-usuario-dockerhub' pelo seu usuário real
           # e 'chatwoot-custom' pelo nome que você quer dar à imagem.
-          images: smarthubtech/chatwoot-ia
+          images: smarthubtech/chatwoot-assistente
 
       # 5. Constrói a imagem usando nosso Dockerfile e a envia para o Docker Hub
       - name: Build and push Docker image

@@ -1,11 +1,9 @@
 <script>
 import { mapGetters } from 'vuex';
-import { ref, computed } from 'vue';
 import { useUISettings } from 'dashboard/composables/useUISettings';
 import { useAccount } from 'dashboard/composables/useAccount';
 import ChatList from '../../../components/ChatList.vue';
 import ConversationBox from '../../../components/widgets/conversation/ConversationBox.vue';
-import AssistantSidebarChat from '../../../components/widgets/conversation/AssistantSidebarChat.vue';
 import wootConstants from 'dashboard/constants/globals';
 import { BUS_EVENTS } from 'shared/constants/busEvents';
 import CmdBarConversationSnooze from 'dashboard/routes/dashboard/commands/CmdBarConversationSnooze.vue';
@@ -20,20 +18,7 @@ export default {
     CmdBarConversationSnooze,
     SidepanelSwitch,
     ConversationSidebar,
-    AssistantSidebarChat,
   },
-  computed: {
-    ...mapGetters({
-      chatList: 'getAllConversations',
-      currentChat: 'getSelectedChat',
-      allInboxes: 'inboxes/getAllInboxes',
-    }),
-    isAIEnabled() {
-      return this.allInboxes.some(inbox => inbox.name === 'assistente-ai');
-    },
-    // ...existing computed properties...
-  },
-  // Removido activeTab, não há mais alternância de abas
   beforeRouteLeave(to, from, next) {
     // Clear selected state if navigating away from a conversation to a route without a conversationId to prevent stale data issues
     // and resolves timing issues during navigation with conversation view and other screens
@@ -229,14 +214,15 @@ export default {
       <SidepanelSwitch v-if="currentChat.id" />
     </ConversationBox>
     <ConversationSidebar v-if="shouldShowSidebar" :current-chat="currentChat" />
-    <ConversationSidebar v-if="shouldShowSidebar" :current-chat="currentChat" />
-    <AssistantSidebarChat
-      v-if="showConversationList && isAIEnabled"
-      class="flex flex-col flex-shrink-0 bg-n-solid-1 border-l border-n-solid-2"
-      :class="[
-        isOnExpandedLayout ? 'basis-full' : 'w-[340px] 2xl:w-[360px]',
-      ]"
-    />
+    <div
+  v-if="showConversationList"
+  class="flex flex-col flex-shrink-0 bg-n-solid-1 border-r border-n-solid-2"
+  :class="[
+    isOnExpandedLayout ? 'basis-full' : 'w-[340px] 2xl:w-[360px]',
+  ]"
+>
+  <!-- conteúdo da nova barra -->
+</div>
     <CmdBarConversationSnooze />
   </section>
 </template>

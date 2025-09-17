@@ -1,5 +1,5 @@
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
 import { useUISettings } from 'dashboard/composables/useUISettings';
 import { useAccount } from 'dashboard/composables/useAccount';
 import ChatList from '../../../components/ChatList.vue';
@@ -19,6 +19,24 @@ export default {
     CmdBarConversationSnooze,
     SidepanelSwitch,
     ConversationSidebar,
+    AssistantSidebarChat,
+  },
+  computed: {
+    ...mapGetters({
+      chatList: 'getAllConversations',
+      currentChat: 'getSelectedChat',
+      allInboxes: 'inboxes/getAllInboxes',
+    }),
+    hasAssistantInbox() {
+      // Log para depuração
+      // eslint-disable-next-line no-console
+      console.log('[SidebarChat] Inboxes disponíveis:', this.allInboxes.map(i => i.name));
+      const found = this.allInboxes.some(inbox => inbox.name === 'assistente-ai');
+      // eslint-disable-next-line no-console
+      console.log('[SidebarChat] Encontrou assistente-ai?', found);
+      return found;
+    },
+    // ...existing computed properties...
   },
   beforeRouteLeave(to, from, next) {
     // Clear selected state if navigating away from a conversation to a route without a conversationId to prevent stale data issues
@@ -216,12 +234,15 @@ export default {
     </ConversationBox>
     <ConversationSidebar v-if="shouldShowSidebar" :current-chat="currentChat" />
     <div
-      v-if="showConversationList"
+      v-if="showConversationList && hasAssistantInbox"
       class="flex flex-col flex-shrink-0 bg-n-solid-1 border-r border-n-solid-2"
       :class="[
         isOnExpandedLayout ? 'basis-full' : 'w-[340px] 2xl:w-[360px]',
       ]"
     >
+      <div class="p-2 text-xs text-n-600 border-b border-n-solid-2">
+        <span>Debug: Inboxes carregadas: {{ allInboxes.map(i => i.name).join(', ') }}</span>
+      </div>
       <AssistantSidebarChat />
     </div>
     <CmdBarConversationSnooze />

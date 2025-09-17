@@ -206,17 +206,6 @@ export default {
       :is-on-expanded-layout="isOnExpandedLayout"
       @conversation-load="onConversationLoad"
     />
-    <!-- Bloco inserido conforme solicitado -->
-<div
-  v-if="showConversationList"
-  class="flex flex-col flex-shrink-0 bg-n-solid-1 border-r border-n-solid-2"
-  :class="[
-    isOnExpandedLayout ? 'basis-full' : 'w-[340px] 2xl:w-[412px]',
-  ]"
->
-  <!-- conteúdo da nova barra -->
-</div>
-
     <ConversationBox
       v-if="showMessageView"
       :inbox-id="inboxId"
@@ -225,6 +214,15 @@ export default {
       <SidepanelSwitch v-if="currentChat.id" />
     </ConversationBox>
     <ConversationSidebar v-if="shouldShowSidebar" :current-chat="currentChat" />
+    <div
+  v-if="showConversationList"
+  class="flex flex-col flex-shrink-0 bg-n-solid-1 border-r border-n-solid-2"
+  :class="[
+    isOnExpandedLayout ? 'basis-full' : 'w-[340px] 2xl:w-[412px]',
+  ]"
+>
+  <!-- conteúdo da nova barra -->
+</div>
     <CmdBarConversationSnooze />
   </section>
 </template>

@@ -4,6 +4,7 @@ import { useUISettings } from 'dashboard/composables/useUISettings';
 import { useAccount } from 'dashboard/composables/useAccount';
 import ChatList from '../../../components/ChatList.vue';
 import ConversationBox from '../../../components/widgets/conversation/ConversationBox.vue';
+import AssistantSidebarChat from '../../../components/widgets/conversation/AssistantSidebarChat.vue';
 import wootConstants from 'dashboard/constants/globals';
 import { BUS_EVENTS } from 'shared/constants/busEvents';
 import CmdBarConversationSnooze from 'dashboard/routes/dashboard/commands/CmdBarConversationSnooze.vue';
@@ -215,14 +216,14 @@ export default {
     </ConversationBox>
     <ConversationSidebar v-if="shouldShowSidebar" :current-chat="currentChat" />
     <div
-  v-if="showConversationList"
-  class="flex flex-col flex-shrink-0 bg-n-solid-1 border-r border-n-solid-2"
-  :class="[
-    isOnExpandedLayout ? 'basis-full' : 'w-[340px] 2xl:w-[360px]',
-  ]"
->
-  <!-- conteúdo da nova barra -->
-</div>
+      v-if="showConversationList"
+      class="flex flex-col flex-shrink-0 bg-n-solid-1 border-r border-n-solid-2"
+      :class="[
+        isOnExpandedLayout ? 'basis-full' : 'w-[340px] 2xl:w-[360px]',
+      ]"
+    >
+      <AssistantSidebarChat />
+    </div>
     <CmdBarConversationSnooze />
   </section>
 </template>

@@ -1,5 +1,6 @@
 <script>
-import { mapGetters, mapState } from 'vuex';
+import { mapGetters } from 'vuex';
+import { ref, computed } from 'vue';
 import { useUISettings } from 'dashboard/composables/useUISettings';
 import { useAccount } from 'dashboard/composables/useAccount';
 import ChatList from '../../../components/ChatList.vue';
@@ -27,17 +28,12 @@ export default {
       currentChat: 'getSelectedChat',
       allInboxes: 'inboxes/getAllInboxes',
     }),
-    hasAssistantInbox() {
-      // Log para depuração
-      // eslint-disable-next-line no-console
-      console.log('[SidebarChat] Inboxes disponíveis:', this.allInboxes.map(i => i.name));
-      const found = this.allInboxes.some(inbox => inbox.name === 'assistente-ai');
-      // eslint-disable-next-line no-console
-      console.log('[SidebarChat] Encontrou assistente-ai?', found);
-      return found;
+    isAIEnabled() {
+      return this.allInboxes.some(inbox => inbox.name === 'assistente-ai');
     },
     // ...existing computed properties...
   },
+  // Removido activeTab, não há mais alternância de abas
   beforeRouteLeave(to, from, next) {
     // Clear selected state if navigating away from a conversation to a route without a conversationId to prevent stale data issues
     // and resolves timing issues during navigation with conversation view and other screens
@@ -233,16 +229,14 @@ export default {
       <SidepanelSwitch v-if="currentChat.id" />
     </ConversationBox>
     <ConversationSidebar v-if="shouldShowSidebar" :current-chat="currentChat" />
+    <ConversationSidebar v-if="shouldShowSidebar" :current-chat="currentChat" />
     <div
-      v-if="showConversationList && hasAssistantInbox"
-      class="flex flex-col flex-shrink-0 bg-n-solid-1 border-r border-n-solid-2"
+      v-if="showConversationList && isAIEnabled"
+      class="flex flex-col flex-shrink-0 bg-n-solid-1 border-l border-n-solid-2"
       :class="[
         isOnExpandedLayout ? 'basis-full' : 'w-[340px] 2xl:w-[360px]',
       ]"
     >
-      <div class="p-2 text-xs text-n-600 border-b border-n-solid-2">
-        <span>Debug: Inboxes carregadas: {{ allInboxes.map(i => i.name).join(', ') }}</span>
-      </div>
       <AssistantSidebarChat />
     </div>
     <CmdBarConversationSnooze />

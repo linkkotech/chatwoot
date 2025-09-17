@@ -16,7 +16,7 @@ export default {
   props: {
     inboxName: {
       type: String,
-      default: 'assistente-ia',
+      default: 'assistente-ai', // corrigido para o nome exato da inbox
     },
   },
   computed: {
@@ -25,9 +25,13 @@ export default {
       dashboardApps: 'dashboardApps/getRecords',
     }),
     assistantChat() {
-      // Filtra a conversa da inbox "assistente-ia" (API)
-      // Se houver mais de uma, pega a mais recente (pode ser ajustado conforme regra de negócio)
-      const filtered = this.allChats.filter(chat => chat.inbox && chat.inbox.name === this.inboxName);
+      // Debug: logar todas as inboxes disponíveis
+      // eslint-disable-next-line no-console
+      console.log('Conversas disponíveis:', this.allChats.map(c => c.inbox && c.inbox.name));
+      const filtered = this.allChats.filter(chat => {
+        // Filtro exato pelo nome correto da inbox
+        return chat.inbox && chat.inbox.name === this.inboxName;
+      });
       // Ordena por updated_at (ou outro critério, se necessário)
       return filtered.length ? filtered.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at))[0] : null;
     },
@@ -55,7 +59,18 @@ export default {
       <ConversationHeader :chat="assistantChat" />
       <MessagesView :chat="assistantChat" :current-chat="assistantChat" />
     </template>
-    <EmptyState v-else />
+    <div v-else class="p-4 text-xs text-center text-n-600">
+      Nenhuma conversa encontrada para a inbox <b>{{ inboxName }}</b>.<br>
+      <span class="block mt-2">Verifique se o nome da inbox está correto ou se há conversas disponíveis.</span>
+      <div class="mt-2 text-left">
+        <b>Inboxes encontradas:</b>
+        <ul>
+          <li v-for="chat in allChats" :key="chat.id">
+            {{ chat.inbox && chat.inbox.name }} (ID: {{ chat.inbox && chat.inbox.id }})
+          </li>
+        </ul>
+      </div>
+    </div>
   </div>
 </template>
 

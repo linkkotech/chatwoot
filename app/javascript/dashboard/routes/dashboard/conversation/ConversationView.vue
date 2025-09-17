@@ -230,15 +230,13 @@ export default {
     </ConversationBox>
     <ConversationSidebar v-if="shouldShowSidebar" :current-chat="currentChat" />
     <ConversationSidebar v-if="shouldShowSidebar" :current-chat="currentChat" />
-    <div
+    <AssistantSidebarChat
       v-if="showConversationList && isAIEnabled"
       class="flex flex-col flex-shrink-0 bg-n-solid-1 border-l border-n-solid-2"
       :class="[
         isOnExpandedLayout ? 'basis-full' : 'w-[340px] 2xl:w-[360px]',
       ]"
-    >
-      <AssistantSidebarChat />
-    </div>
+    />
     <CmdBarConversationSnooze />
   </section>
 </template>

@@ -75,6 +75,7 @@ export default {
       chatList: 'getAllConversations',
       currentChat: 'getSelectedChat',
       allInboxes: 'inboxes/getAllInboxes',
+      currentUserId: 'getCurrentUserID',
     }),
     isAIEnabled() {
       // eslint-disable-next-line no-console
@@ -226,7 +227,10 @@ export default {
       v-if="isAIEnabled"
       class="flex flex-col flex-shrink-0 bg-slate-800 border-l border-slate-700 w-[340px]"
     >
-      <AssistantSidebarChat />
+      <AssistantSidebarChat
+        :current-user-id="currentUserId"
+        :active-conversation-id="parseInt(conversationId, 10) || null"
+      />
     </div>
     <CmdBarConversationSnooze />
   </section>

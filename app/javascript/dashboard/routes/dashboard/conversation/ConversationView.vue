@@ -10,6 +10,7 @@ import CmdBarConversationSnooze from 'dashboard/routes/dashboard/commands/CmdBar
 import { emitter } from 'shared/helpers/mitt';
 import SidepanelSwitch from 'dashboard/components-next/Conversation/SidepanelSwitch.vue';
 import ConversationSidebar from 'dashboard/components/widgets/conversation/ConversationSidebar.vue';
+import AssistantSidebarChat from '../../../components/widgets/conversation/AssistantSidebarChat.vue';
 
 export default {
   components: {
@@ -18,6 +19,7 @@ export default {
     CmdBarConversationSnooze,
     SidepanelSwitch,
     ConversationSidebar,
+    AssistantSidebarChat,
   },
   beforeRouteLeave(to, from, next) {
     // Clear selected state if navigating away from a conversation to a route without a conversationId to prevent stale data issues
@@ -72,7 +74,13 @@ export default {
     ...mapGetters({
       chatList: 'getAllConversations',
       currentChat: 'getSelectedChat',
+      allInboxes: 'inboxes/getAllInboxes',
     }),
+    isAIEnabled() {
+      // eslint-disable-next-line no-console
+      console.log('Checking inboxes:', this.allInboxes);
+      return this.allInboxes.some(inbox => inbox.name === 'assistente-ai');
+    },
     showConversationList() {
       return this.isOnExpandedLayout ? !this.conversationId : true;
     },
@@ -215,14 +223,11 @@ export default {
     </ConversationBox>
     <ConversationSidebar v-if="shouldShowSidebar" :current-chat="currentChat" />
     <div
-  v-if="showConversationList"
-  class="flex flex-col flex-shrink-0 bg-n-solid-1 border-r border-n-solid-2"
-  :class="[
-    isOnExpandedLayout ? 'basis-full' : 'w-[340px] 2xl:w-[360px]',
-  ]"
->
-  <!-- conteúdo da nova barra -->
-</div>
+      v-if="isAIEnabled"
+      class="flex flex-col flex-shrink-0 bg-slate-800 border-l border-slate-700 w-[340px]"
+    >
+      <AssistantSidebarChat />
+    </div>
     <CmdBarConversationSnooze />
   </section>
 </template>

@@ -22,17 +22,25 @@ export default {
   computed: {
     ...mapGetters({
       allChats: 'getAllConversations',
+      inboxes: 'inboxes/getAllInboxes',
       dashboardApps: 'dashboardApps/getRecords',
     }),
-    assistantChat() {
-      // Debug: logar todas as inboxes disponíveis
+    assistantInbox() {
       // eslint-disable-next-line no-console
-      console.log('Conversas disponíveis:', this.allChats.map(c => c.inbox && c.inbox.name));
-      const filtered = this.allChats.filter(chat => {
-        // Filtro exato pelo nome correto da inbox
-        return chat.inbox && chat.inbox.name === this.inboxName;
-      });
-      // Ordena por updated_at (ou outro critério, se necessário)
+      console.log('Todas as inboxes:', this.inboxes);
+      return this.inboxes.find(inbox => inbox.name === 'assistente-ai');
+    },
+    assistantChat() {
+      // eslint-disable-next-line no-console
+      console.log('Todas as conversas:', this.allChats);
+      if (!this.assistantInbox) return null;
+      
+      const filtered = this.allChats.filter(chat => 
+        chat.inbox_id === this.assistantInbox.id
+      );
+      // eslint-disable-next-line no-console
+      console.log('Conversas filtradas para assistente-ai:', filtered);
+      
       return filtered.length ? filtered.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at))[0] : null;
     },
     dashboardAppTabs() {
